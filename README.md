@@ -18,3 +18,13 @@ SO THAT I can plan a trip accordingly
 ## Mock-up
 
 ![alt text](./assets/weatherApp.png)
+
+## GitHub Repo
+
+> https://github.com/SherrickM/weather-dashboard
+
+## Deployed Application
+
+[Weather Dashboard Application](https://sherrickm.github.io/weather-dashboard/)
+
+
