@@ -1,3 +1,4 @@
+console.log("connected")
 let APIkey = "d4f628acb4cbca3bd74c04306a7eb147";
 
 let cityInputEl = $('#enter-city');
@@ -25,15 +26,15 @@ function getWeather(data){
           cityNameEl.text(currentCity);
           currentConditionsEl.append(cityNameEl);
 
-          // get date from results and display by appending to city name element
+          // get date from results
           let currentCityDate = data.current.dt;
           currentCityDate = moment.unix(currentCityDate).format("MM/DD/YYYY");
           let currentDateEl = $('<span>');
           currentDateEl.text(` (${currentCityDate}) `);
           cityNameEl.append(currentDateEl);
 
-          // get weather icon and display by appending to city name element            
-          let currentCityWeatherIcon = data.current.weather[0].icon; // current weather icon
+          // get weather icon and display           
+          let currentCityWeatherIcon = data.current.weather[0].icon; 
           let currentWeatherIconEl = $('<img>');
           currentWeatherIconEl.attr("src", "http://openweathermap.org/img/wn/" + currentCityWeatherIcon + ".png");
           cityNameEl.append(currentWeatherIconEl);
@@ -56,7 +57,7 @@ function getWeather(data){
           currentHumidityEl.text(`Humidity: ${currentCityHumidity}%`)
           currentConditionsEl.append(currentHumidityEl);
 
-          // get current UV index, set background color based on level and display
+          // get current UV index, 
           let currentCityUV = data.current.uvi;
           let currentUvEl = $('<p>');
           let currentUvSpanEl = $('<span>');
@@ -125,23 +126,131 @@ function getWeather(data){
 };
 
 
-// function to the history
+// Display search history
+function searchHistory() {
+  let storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+  let pastSearchesEl = document.getElementById('past-searches');
 
-function getHistory() {
-  
-};
+  pastSearchesEl.innerHTML = '';
 
-// function to the coordinates
-function getCoordinates(){
+  for (i = 0; i < storedCities.length; i++) {
 
-};
-
-// Clear history
-function clearHistory(){
-
-};
-
-// clear weather
-function clearWeather(){
-
+      let pastCityBtn = document.createElement("button");
+      pastCityBtn.classList.add("btn", "btn-primary", "my-2", "past-city");
+      pastCityBtn.setAttribute("style", "width: 100%");
+      pastCityBtn.textContent = `${storedCities[i].city}`;
+      pastSearchesEl.appendChild(pastCityBtn);
+  }
+  return;
 }
+
+
+function getCoordinates() {
+  let requestUrl = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${APIkey}`;
+  let storedCities = JSON.parse(localStorage.getItem("cities")) || [];
+
+  fetch(requestUrl)
+      .then(function (response) {
+          if (response.status >= 200 && response.status <= 299) {
+              return response.json();
+          } else {
+              throw Error(response.statusText);
+          }
+      })
+      .then(function (data) {
+
+          let cityInfo = {
+              city: currentCity,
+              lon: data.coord.lon,
+              lat: data.coord.lat
+          }
+
+          storedCities.push(cityInfo);
+          localStorage.setItem("cities", JSON.stringify(storedCities));
+
+          searchHistory();
+
+          return cityInfo;
+      })
+      .then(function (data) {
+          getWeather(data);
+      })
+  return;
+}
+
+// Clear Search History
+function clearHistory(event) {
+  event.preventDefault();
+  let pastSearchesEl = document.getElementById('past-searches');
+
+  localStorage.removeItem("cities");
+  pastSearchesEl.innerHTML = '';
+
+  return;
+}
+
+function clearCurrentCityWeather() {
+  let currentConditionsEl = document.getElementById("currentConditions");
+  currentConditionsEl.innerHTML = '';
+
+  let fiveDayForecastHeaderEl = document.getElementById("fiveDayForecastHeader");
+  fiveDayForecastHeaderEl.innerHTML = '';
+
+  let fiveDayForecastEl = document.getElementById("fiveDayForecast");
+  fiveDayForecastEl.innerHTML = '';
+
+  return;
+}
+
+// handle submit of city name 
+function handleCityFormSubmit(event) {
+  event.preventDefault();
+  currentCity = cityInputEl.val().trim();
+
+  clearCurrentCityWeather();
+  getCoordinates();
+
+  return;
+}
+
+
+function getPastCity(event) {
+  let element = event.target;
+
+  if (element.matches(".past-city")) {
+      currentCity = element.textContent;
+
+      clearCurrentCityWeather();
+
+      let requestUrl = `https://api.openweathermap.org/data/2.5/weather?q=${currentCity}&appid=${APIkey}`;
+
+      fetch(requestUrl)
+          .then(function (response) {
+              if (response.status >= 200 && response.status <= 299) {
+                  return response.json();
+              } else {
+                  throw Error(response.statusText);
+              }
+          })
+          .then(function (data) {
+              let cityInfo = {
+                  city: currentCity,
+                  lon: data.coord.lon,
+                  lat: data.coord.lat
+              }
+              return cityInfo;
+          })
+          .then(function (data) {
+              getWeather(data);
+          })
+  }
+  return;
+}
+
+searchHistory();
+
+searchBtn.on("click", handleCityFormSubmit);
+
+clearBtn.on("click", clearHistory);
+
+pastSearchedCitiesEl.on("click", getPastCity);
