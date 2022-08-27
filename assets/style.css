@@ -1,0 +1,20 @@
+
+header{
+  background-color: #dad2bc;
+  color: black;
+}
+
+body{
+  background-color: #f5f1ed;
+}
+
+.btn{
+  background-color: #a99985;
+  border: 1px solid black;
+}
+
+.btn:hover{
+  background-color: #f5f1ed;
+  color: black;
+  border: 1px solid #252323;
+}

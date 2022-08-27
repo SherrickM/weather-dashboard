@@ -5,46 +5,64 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+  <link rel="stylesheet" href="./assets/style.css">
   <title>Weather Dashboard</title>
 </head>
 <body>
-  <header>
-    <h1>Weather Dashboard</h1>
+  <header class="container-fluid text-center t">
+    <h1>Weather Forcast App</h1>
 </header>
-<div class="container">
-    <div class="row">
-        <div class="col-md-4" id="leftSide">
-            <div class="row searchBox">
-                <form id="searchForm">
-                    <label class="searchItem">City Search</label>
-                    <input type="text" class="searchItem" id="input" placeholder="Enter City">
-                    <button type="submit" class="weatherBtn searchItem" id="submit">Submit</button>
-                </form>
-            </div>
-            <hr>
-            <div class="row" id="cityList">
-                <h3>Search History</h3>
-                <ul id="cities">
+</header>
 
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-8" id="rightSide">
-            <div class="row weatherBox">
-                <h3>Current Weather</h3>
-                <ul id="currentWeather">
-
-                </ul>
-            </div>
-            <div id="foreTitle">
-                <h3>5-Day Forecast</h3>
-            </div>
-            <div class="row" id="forecast">
-                
-            </div>
-        </div>
-    </div>
+<div class="container-fluid">
+  <div class="row">
+      <div class="col-lg-3">
+          <h5 class="mt-2">Search for a City:</h5>
+          <div class="input-group mb-3">
+              <input id="enter-city" type="text" class="form-control" placeholder="Enter a city"
+                  aria-label="Enter a city">
+              <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" id="search-button">
+                      <i class="fas fa-search"></i>
+                  </button>
+              </div>
+          </div>
+          <div class="border-top " id="past-searches"></div>
+          <button class="btn btn-primary mb-3" type="button" id="clear-history">Clear history</button>
+          <form id="history"></form>
+          <!-- Past city searches -->
+      </div>
+      <div class="col-lg-9">
+          <div class="row mr-0">
+              <div class="col-lg-2 card m-3 d-none" id="today-weather">
+                  <div class="card-body">
+                      <h3 id="city-name" class="city-name align-middle"></h3>
+                      <img id="current-pic" alt="">
+                  </div>
+                  <div class="col-lg-2 card m-3 d-none">
+                      <ul>
+                          <li><p id="temperature"></p></li>
+                          <li><p id="humidity"></p></li>
+                          <li><p id="wind-speed"></p></li>
+                          <li><p id="UV-index"></p></li>
+                      </ul>
+                     
+                   </div>
+                  
+              </div>
+          </div>
+         
+          <!-- 5 day forecast -->
+          <div class="row" id="currentConditions"></div>
+          
+          <div class="row" id="fiveDayForecastHeader"></div>
+          <div class="d-flex flex-row flex-wrap justify-content-between" id="fiveDayForecast"></div>
+      </div>
+      
+      
+  </div>
+</div>
 </div>
   <script src="./app.js"></script>
 </body>
