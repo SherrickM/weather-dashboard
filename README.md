@@ -17,3 +17,4 @@ SO THAT I can plan a trip accordingly
 
 ## Mock-up
 
+![alt text](./assets/weatherApp.png)
